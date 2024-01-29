@@ -25,7 +25,7 @@ user = config['database']['user']
 password = config['database']['password']
 
 
-connection = psycopg2.connect(database='ipf_project', host='localhost', user='postgres', password='')
+connection = psycopg2.connect(database='database', host='localhost', user='postgres', password='')
 cursor = connection.cursor()
 create_table_query = """
     CREATE TABLE IF NOT EXISTS open_ipf(
