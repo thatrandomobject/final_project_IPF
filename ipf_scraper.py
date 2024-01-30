@@ -1,8 +1,5 @@
 import configparser
-import requests
-from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -24,11 +21,11 @@ database = config['database']['database']
 user = config['database']['user']
 password = config['database']['password']
 
-
-connection = psycopg2.connect(database='database', host='localhost', user='postgres', password='')
+# creating a connection and table creation query
+connection = psycopg2.connect(database=database, host=host, user=user, password=password)
 cursor = connection.cursor()
 create_table_query = """
-    CREATE TABLE IF NOT EXISTS open_ipf(
+    CREATE TABLE IF NOT EXISTS open_ipf_test(
     rank INT,
     athlete_name VARCHAR,
     federation VARCHAR,
@@ -49,7 +46,7 @@ cursor.execute(create_table_query)
 
 start = time.time()
 url = 'https://www.openipf.org/'
-duomenys = []
+scraped_data = []
 service = Service(ChromeDriverManager().install())
 options = Options()
 options.add_argument('--headless')
@@ -59,23 +56,22 @@ options.add_argument('--no-sandbox')
 service.start()
 driver = webdriver.Chrome(service=service, options=options)
 
-
 driver.get(url)
 WebDriverWait(driver, 10).until(EC.presence_of_element_located((
     By.CLASS_NAME, 'ui-widget-content '
 )))
 max_height = driver.execute_script('return document.querySelector("div.slick-viewport-left:nth-child(3)").scrollHeight')
-height_of_data = 0
-rank_list = []
+height_of_data = 0  # start of data heights
+rank_list = []  # save ranks here which have already been read in
 while height_of_data < max_height - 25:
     WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((
         By.CLASS_NAME, 'slick-cell')))
-    print(height_of_data)
     table_element = driver.find_element(By.XPATH, '//*[@id="theGrid"]/div[4]/div[3]')
     time.sleep(3)
     data = driver.find_elements(By.CLASS_NAME, 'ui-widget-content ')
     for stats in data:
-        height_of_data = float(stats.get_attribute('style').split(' ')[1].replace('px', '').replace(';', ''))
+        height_of_data = float(stats.get_attribute('style').split(' ')[1].replace('px', '')
+                               .replace(';', ''))
         rank = stats.find_element(By.CLASS_NAME, 'slick-cell.l1.r1').text
         if rank not in rank_list:
             rank_list.append(rank)
@@ -123,7 +119,7 @@ while height_of_data < max_height - 25:
             glp_score = stats.find_element(By.CLASS_NAME, 'slick-cell.l15.r15').text
             if glp_score == '':
                 glp_score = None
-            duomenys.append({
+            scraped_data.append({
                 'Rank': rank,
                 'Name': name,
                 'Federation': federation,
@@ -140,8 +136,10 @@ while height_of_data < max_height - 25:
                 'Total': total,
                 'GLP': glp_score
             })
-            insert_query = ('INSERT INTO open_ipf(rank, athlete_name, federation, event_date, home, sex, age, equip, weight_class,'
-                            'weight, squat, bench_press, deadlift, total, glp_score) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)')
+            insert_query = ('INSERT INTO open_ipf_test('
+                            'rank, athlete_name, federation, event_date, home, sex, age, equip, weight_class,'
+                            'weight, squat, bench_press, deadlift, total, glp_score) VALUES('
+                            '%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)')
             cursor.execute(insert_query, (rank, name, federation, date, home, sex, age, equip, weight_class, weight,
                                           squat, bench, deadlift, total, glp_score))
         else:
@@ -149,12 +147,11 @@ while height_of_data < max_height - 25:
     connection.commit()
     driver.execute_script('arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;',
                           table_element)
-
 driver.quit()
 
 
-df = pd.DataFrame(duomenys)
-df.to_csv('csv_files/IPF_data.csv', index=False)
+df = pd.DataFrame(scraped_data)
+df.to_csv('IPF_data.csv', index=False)  # done to create a csv file to have alongside SQL query
 end = time.time()
 duration = end-start
-print(duration)
+print(f'Whole website was scraped.\nTime of start {start}.\nTime of end {end}.\nIt took {duration/3600} minutes.')
