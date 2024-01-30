@@ -98,6 +98,17 @@ df = pd.read_sql_query(sql_query, engine)
 df = df.dropna()
 
 # data clean-up, mapping and other data preparation
+def age_group(age):
+    if age <= 18:
+        return '01 Sub-Junior'
+    elif age < 25:
+        return '02 Junior'
+    elif age < 35:
+        return '03 Senior'
+    else:
+        return '04 Master'
+
+
 df['event_date'] = pd.to_datetime(df['event_date'])
 df['year'] = df['event_date'].dt.year.astype(int)
 df['athlete_name'] = df['athlete_name'].str.split(' #').str[0]
@@ -112,10 +123,12 @@ df['home'] = df['home'].str.split('-').str[0]
 df['relative_strength'] = df['total']/df['weight']
 df['longitude'] = df['home'].map(longitude, None)
 df['latitude'] = df['home'].map(latitude, None)
+df['age_group'] = df['age'].apply(age_group)
 
 # CHART FUNCTIONS
 
 # a function that draws 4 charts, 2 for male and 2 for female stats
+
 def total_rs_gender(start_date, end_date, df):
     df = df[(df['event_date'] < f'{end_date}')&(df['event_date'] > f'{start_date}')]
     df_male = df[df['sex'] == 'M']
@@ -124,18 +137,19 @@ def total_rs_gender(start_date, end_date, df):
     df_female = df[df['sex'] == 'F']
     average_total_female = df_female.groupby(['year'])['total'].mean()
     average_rs_female = df_female.groupby(['year'])['relative_strength'].mean()
+    plt.figure(figsize=(8, 8))
     plt.subplot(2, 2, 1)
     average_rs_male.plot(kind='line')
     plt.ylim(4, 7)
     plt.xticks(rotation=0)
     plt.title('Average Male RS by Year')
-    plt.ylabel('PFPS')
+    plt.ylabel('Ratio of Total to athlete Weight')
     plt.xlabel('Year')
     plt.subplot(2, 2, 2)
     average_rs_female.plot(kind='line')
     plt.ylim(4, 7)
     plt.xticks(rotation=0)
-    plt.ylabel('PFPS')
+    plt.ylabel('Ratio of Total to athlete Weight')
     plt.title('Average Female RS by Year')
     plt.xlabel('Year')
     plt.tight_layout()
@@ -157,12 +171,13 @@ def total_rs_gender(start_date, end_date, df):
     plt.show()
 
 
-total_rs_gender('2018-01-01', '2024-01-01', df)
+# total_rs_gender('2018-01-01', '2024-01-01', df)
 
 # athlete count change by year seaborn barplot
 def athlete_count_year(start_year, end_year, df):
     df = df[(df['year'] < end_year) & (df['year'] >= start_year)]
     athlete_count_by_year = df.groupby(['year'])['athlete_name'].count()
+    plt.figure(figsize=(8, 8))
     sns.barplot(athlete_count_by_year)
     plt.title('Athlete Count by Year')
     plt.xlabel('Year')
@@ -171,11 +186,11 @@ def athlete_count_year(start_year, end_year, df):
     plt.show()
 
 
-athlete_count_year(2018, 2024, df)
+# athlete_count_year(2018, 2024, df)
 
 # athlete count by home over years plotly time period 2018-2024
-def athlete_count_country(df):
-    df = df[(df['event_date'] < f'2024-01-01')&(df['event_date'] > f'2018-01-01')]
+def athlete_count_country(start_year, end_year, df):
+    df = df[(df['year'] < end_year)&(df['year'] >= start_year)]
     home_athlete_count = df.groupby(['home', 'longitude', 'latitude', 'year'])['athlete_name'].count()
     df_home_athlete_count = home_athlete_count.to_frame().reset_index().rename(columns={
         'home': 'Country',
@@ -190,11 +205,12 @@ def athlete_count_country(df):
     fig.show()
 
 
-athlete_count_country(df)
+# athlete_count_country(2018, 2024,df)
 
 # top 5 strongest countries in year X by total
 def top5_strongest_countries(year):
     strongest_countries = df[df['year'] == year].groupby('home')['total'].max().sort_values(ascending=False).head(5).reset_index()
+    plt.figure(figsize=(8, 8))
     fig = sns.barplot(data=strongest_countries, x='home', y='total', hue='home')
     plt.title(f'Top 5 Countries by Total in {year}')
     plt.xlabel('Country')
@@ -205,8 +221,52 @@ def top5_strongest_countries(year):
     plt.show()
 
 
-top5_strongest_countries(2023)
+# top5_strongest_countries(2023)
+
+# average age by gender by years
+
+def average_age_by_year_gender(start_year, end_year, df):
+    df = df[(df['year'] < end_year) & (df['year'] >= start_year) & (df['sex'] != 'Mx')]
+    # df_male = df[df['sex'] == 'M']
+    # df_female = df[df['sex'] == 'F']
+    # grouped_df_m = df_male.groupby(['sex', 'year'])['age'].mean().reset_index()
+    # grouped_df_f = df_female.groupby(['sex', 'year'])['age'].mean().reset_index()
+    # grouped_df_m.plot(kind='line')
+    plt.figure(figsize=(8, 8))
+    sns.barplot(df, x='year', y='age', hue='sex')
+    plt.title('Average Age of Athletes by Year')
+    plt.legend(title='Gender')
+    plt.xlabel('Year')
+    plt.ylabel('Age')
+    plt.show()
+
+# average_age_by_year_gender(2018, 2024, df)
+
+# average strength by age category bench, squat, deadlift
 
 
+def average_strength_age_group(year, df):
+    df = df[df['year'] == year]
+    grouped_df = df.groupby('age_group')[['squat', 'bench_press', 'deadlift']].mean()
+    plt.figure(figsize=(8, 8))
+    plt.subplot(3, 1, 1)
+    sns.barplot(grouped_df, x='age_group', y='squat', hue='age_group')
+    plt.title(f'Average Squat for each Age Group in year {year}')
+    plt.xlabel('Age group')
+    plt.ylabel('kg, Strength')
+    plt.subplot(3, 1, 2)
+    sns.barplot(grouped_df, x='age_group', y='bench_press', hue='age_group')
+    plt.title(f'Average Bench Press for each Age Group in year {year}')
+    plt.xlabel('Age group')
+    plt.ylabel('kg, Strength')
+    plt.subplot(3, 1, 3)
+    sns.barplot(grouped_df, x='age_group', y='deadlift', hue='age_group')
+    plt.title(f'Average Deadlift for each Age Group in year {year}')
+    plt.xlabel('Age group')
+    plt.ylabel('kg, Strength')
+    plt.tight_layout()
+    plt.show()
+
+# average_strength_age_group(2023, df)
 
 
