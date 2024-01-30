@@ -19,7 +19,7 @@ port = config['database']['port']
 database = config['database']['database']
 user = config['database']['user']
 
-engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{database}') # 'driver://username:password@host:port/database
+engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{database}')
 
 sql_query = "SELECT * FROM open_ipf;"  # reading all the data from an SQL table
 
@@ -93,7 +93,7 @@ longitude = {
     'Lithuania': 23.7499997
 }
 
-# reading data from sql
+# reading data from sql and defining a data frame with dropped Null values
 df = pd.read_sql_query(sql_query, engine)
 df = df.dropna()
 
@@ -113,86 +113,100 @@ df['relative_strength'] = df['total']/df['weight']
 df['longitude'] = df['home'].map(longitude, None)
 df['latitude'] = df['home'].map(latitude, None)
 
-# time filter
-df = df[(df['event_date'] < '2024-01-01')&(df['event_date'] > '2018-01-01')]
-
-# calculations
-df_male = df[df['sex'] == 'M']
-average_total_male = df_male.groupby(['year'])['total'].mean()
-average_pfps_male = df_male.groupby(['year'])['relative_strength'].mean()
-average_age_male = df_male.groupby(['year'])['age'].mean()
-df_female = df[df['sex'] == 'F']
-average_total_female = df_female.groupby(['year'])['total'].mean()
-average_pfps_female = df_female.groupby(['year'])['relative_strength'].mean()
-average_age_female = df_female.groupby(['year'])['age'].mean()
-athlete_count_by_year = df.groupby(['year'])['athlete_name'].count()
-home_athlete_count = df.groupby(['home', 'longitude', 'latitude', 'year'])['athlete_name'].count()
-df_home_athlete_count = home_athlete_count.to_frame().reset_index().rename(columns={
-    'home': 'Country',
-    'longitude': 'Lon',
-    'latitude': 'Lat',
-    'year': 'Year',
-    'athlete_name': 'Athlete Count'})
-most_participated_athletes = df['athlete_name'].value_counts().head(3)
-matthew_smith = df[(df['athlete_name'] == 'Matthew Smith')&(df['home'] == 'USA')]
-
-# plots
-# PFPS and Total by year
-# plt.subplot(2, 2, 1)
-# average_pfps_male.plot(kind='line')
-# plt.ylim(4, 7)
-# plt.xticks(rotation=0)
-# plt.title('Average Male RS by Year')
-# plt.ylabel('PFPS')
-# plt.xlabel('Year')
-# plt.subplot(2, 2, 2)
-# average_pfps_female.plot(kind='line')
-# plt.ylim(4, 7)
-# plt.xticks(rotation=0)
-# plt.ylabel('PFPS')
-# plt.title('Average Female RS by Year')
-# plt.xlabel('Year')
-# plt.tight_layout()
-# plt.subplot(2, 2, 3)
-# average_total_male.plot(kind='line')
-# plt.ylim(300, 650)
-# plt.xticks(rotation=0)
-# plt.title('Average Male Total by Year')
-# plt.ylabel('lbs, total')
-# plt.xlabel('Year')
-# plt.subplot(2, 2, 4)
-# average_total_female.plot(kind='line')
-# plt.ylim(300, 650)
-# plt.xticks(rotation=0)
-# plt.title('Average Female Total by Year')
-# plt.ylabel('lbs, total')
-# plt.xlabel('Year')
-# plt.tight_layout()
-# plt.show()
-
-# athlete count by year
-# sns.barplot(athlete_count_by_year)
-# plt.title('Athlete Count by Year')
-# plt.xlabel('Year')
-# plt.ylabel('Athlete Count')
-# plt.tight_layout()
-# plt.show()
-
-
-# athlete count by home over years plotly
-
-print(df_home_athlete_count)
-# fig = px.scatter_geo(df_home_athlete_count, lat='Lat', lon='Lon', color="Country",
-#                      hover_name="Country", size="Athlete Count", size_max=70,
-#                      animation_frame="Year",
-#                      projection="natural earth")
-# fig.show()
-
-# top 10 strongest countries in 2023 by total?
-# df_2023_strongest_countries = df[df['year'] == 2023].groupby('home')['total'].max().sort_values(ascending=False).head(10)
-# print(df_2023_strongest_countries)
-
-# print(top_strength_2023_by_country)
-# improvement of most participated athlete over years?
+# CHART FUNCTIONS
 
 # a function that draws 4 charts, 2 for male and 2 for female stats
+def total_rs_gender(start_date, end_date, df):
+    df = df[(df['event_date'] < f'{end_date}')&(df['event_date'] > f'{start_date}')]
+    df_male = df[df['sex'] == 'M']
+    average_total_male = df_male.groupby(['year'])['total'].mean()
+    average_rs_male = df_male.groupby(['year'])['relative_strength'].mean()
+    df_female = df[df['sex'] == 'F']
+    average_total_female = df_female.groupby(['year'])['total'].mean()
+    average_rs_female = df_female.groupby(['year'])['relative_strength'].mean()
+    plt.subplot(2, 2, 1)
+    average_rs_male.plot(kind='line')
+    plt.ylim(4, 7)
+    plt.xticks(rotation=0)
+    plt.title('Average Male RS by Year')
+    plt.ylabel('PFPS')
+    plt.xlabel('Year')
+    plt.subplot(2, 2, 2)
+    average_rs_female.plot(kind='line')
+    plt.ylim(4, 7)
+    plt.xticks(rotation=0)
+    plt.ylabel('PFPS')
+    plt.title('Average Female RS by Year')
+    plt.xlabel('Year')
+    plt.tight_layout()
+    plt.subplot(2, 2, 3)
+    average_total_male.plot(kind='bar')
+    plt.ylim(0, 650)
+    plt.xticks(rotation=0)
+    plt.title('Average Male Total by Year')
+    plt.ylabel('kg, total')
+    plt.xlabel('Year')
+    plt.subplot(2, 2, 4)
+    average_total_female.plot(kind='bar')
+    plt.ylim(0, 650)
+    plt.xticks(rotation=0)
+    plt.title('Average Female Total by Year')
+    plt.ylabel('kg, total')
+    plt.xlabel('Year')
+    plt.tight_layout()
+    plt.show()
+
+
+total_rs_gender('2018-01-01', '2024-01-01', df)
+
+# athlete count change by year seaborn barplot
+def athlete_count_year(start_year, end_year, df):
+    df = df[(df['year'] < end_year) & (df['year'] >= start_year)]
+    athlete_count_by_year = df.groupby(['year'])['athlete_name'].count()
+    sns.barplot(athlete_count_by_year)
+    plt.title('Athlete Count by Year')
+    plt.xlabel('Year')
+    plt.ylabel('Athlete Count')
+    plt.tight_layout()
+    plt.show()
+
+
+athlete_count_year(2018, 2024, df)
+
+# athlete count by home over years plotly time period 2018-2024
+def athlete_count_country(df):
+    df = df[(df['event_date'] < f'2024-01-01')&(df['event_date'] > f'2018-01-01')]
+    home_athlete_count = df.groupby(['home', 'longitude', 'latitude', 'year'])['athlete_name'].count()
+    df_home_athlete_count = home_athlete_count.to_frame().reset_index().rename(columns={
+        'home': 'Country',
+        'longitude': 'Lon',
+        'latitude': 'Lat',
+        'year': 'Year',
+        'athlete_name': 'Athlete Count'})
+    fig = px.scatter_geo(df_home_athlete_count, lat='Lat', lon='Lon', color="Country",
+                         size="Athlete Count", size_max=70,
+                         animation_frame="Year",
+                         projection="natural earth", title='Athlete Count by Country')
+    fig.show()
+
+
+athlete_count_country(df)
+
+# top 5 strongest countries in year X by total
+def top5_strongest_countries(year):
+    strongest_countries = df[df['year'] == year].groupby('home')['total'].max().sort_values(ascending=False).head(5).reset_index()
+    fig = sns.barplot(data=strongest_countries, x='home', y='total', hue='home')
+    plt.title(f'Top 5 Countries by Total in {year}')
+    plt.xlabel('Country')
+    plt.ylabel('kg, Total')
+    plt.tight_layout()
+    for i in fig.containers:
+        fig.bar_label(i)
+    plt.show()
+
+
+top5_strongest_countries(2023)
+
+
+
+
