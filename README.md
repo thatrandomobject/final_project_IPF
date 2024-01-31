@@ -35,9 +35,11 @@ Python language in PyCharm environment, CSV files and Database (PostgreSQL) were
 
   Graphs No. 7, No. 8, and No. 9 are about interesting facts to know: 
 
-  The average age is higher in females’ group then in men’s over the comparative time period of 5 sequent yrs (No. 7). 
-  The average of Total Strength among different age groups of the powerlifters across three specific lifts (Squat, Bench, and Deadlift). Data from 2023 suggests (No. 8). Are you up for Deadlift in your age group? :)
-  Where the strongest powerlifters live? Bar Graph No. 9 with TOP 5 Countries to look into based on data from 2023. 
+  _The average age is higher in females’ group then in men’s over the comparative time period of 5 sequent yrs (No. 7)._
+  
+  _The average of Total Strength among different age groups of the powerlifters across three specific lifts (Squat, Bench, and Deadlift). Data from 2023 suggests (No. 8). Are you up for Deadlift in your age group?_
+  
+  _Where the strongest powerlifters live? Bar Graph No. 9 with TOP 5 Countries to look into based on data from 2023._
 
 
 
