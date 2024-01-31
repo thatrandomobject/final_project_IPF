@@ -41,7 +41,6 @@ The file contains 7 functions:
 + average_age_by_year_gender(start_year, end_year)
 + average_strength_age_group(year)
 + relative_strength_regression(date_start, date_end)
-+
 
 ## Linear graphs No. 1, No. 2, and bar graphs No. 3, No. 4:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/rs%20and%20total%20by%20gender.png)
