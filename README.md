@@ -20,11 +20,11 @@ Python language in PyCharm environment, CSV files and Database (PostgreSQL) were
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/athlete%20count%20by%20year.png)
 ## Map graph No. 8:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/athlete%20count%20by%20country.png)
-## Bar Graph No. 9:
+## Bar graph No. 9:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/average%20age%20by%20year%20by%20gender.png)
-## Bar Graph No. 10:
+## Bar graph No. 10:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/squat%20bench%20press%20deadlift%20by%20age%20group.png)
-## Bar Graph No. 11:
+## Bar graph No. 11:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/top%205%20strongest%20countries.png)
 
 **## Summary of Key Findings**
