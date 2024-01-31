@@ -157,7 +157,7 @@ def total_rs_gender(start_date, end_date):
     plt.ylim(4, 7)
     # set formatting of text of x-axis
     plt.xticks(rotation=0)
-     # set title of chart
+    # set title of chart
     plt.title('Average Male RS by Year')
     # set title of y-axis
     plt.ylabel('Ratio of Total to Athlete Weight')
@@ -192,7 +192,7 @@ def total_rs_gender(start_date, end_date):
     plt.show()
 
 
-total_rs_gender('2018-01-01', '2024-01-01')
+# total_rs_gender('2018-01-01', '2024-01-01')
 
 # athlete count change by year seaborn barplot
 def athlete_count_year(start_year, end_year):
@@ -237,7 +237,7 @@ def athlete_count_country(start_year, end_year):
     fig.show()
 
 
-# athlete_count_country(2018, 2024,df)
+# athlete_count_country(2018, 2024)
 
 # top 5 strongest countries in year X by total
 def top5_strongest_countries(year):
@@ -298,7 +298,7 @@ def average_strength_age_group(year):
     plt.tight_layout()
     plt.show()
 
-# average_strength_age_group(2023, df)
+# average_strength_age_group(2023)
 
 
 def relative_strength_regression(date_start, date_end):
