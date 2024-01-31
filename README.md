@@ -10,21 +10,18 @@ Project theme: Sport Competition Analysis.
 This project is designed to collect data (Web Scraping), analyse and visualize data for International Open  Weightlifting Sport competitions by IPF in order to identify trends in the activities of the athletes grouped by gender, age, countries, and to perform comparative analysis over time - 5 years time frame (2018-2023)
 Python language in PyCharm environment, CSV files and Database (PostgreSQL) were used as tools.
 
-## Linear graphs No. 1, No. 2:
+## Linear graphs No. 1, No. 2, and bar graphs No. 3, No. 4:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/rs%20and%20total%20by%20gender.png)
-## and bar graphs No. 3, No. 4:
-
 ## Bar graph No. 5:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/athlete%20count%20by%20year.png)
-
 ## Map graph No. 6:
-
+![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/athlete%20count%20by%20country.png)
 ## Bar Graph No. 7:
-
+![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/average%20age%20by%20year%20by%20gender.png)
 ## Bar Graph No. 8:
-
+![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/squat%20bench%20press%20deadlift%20by%20age%20group.png)
 ## Bar Graph No. 9:
-
+![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/top%205%20strongest%20countries.png)
 
 **## Summary of Key Findings**
 
