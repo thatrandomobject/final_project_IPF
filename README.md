@@ -10,27 +10,37 @@ Project theme: Sport Competition Analysis.
 This project is designed to collect data (Web Scraping), analyse and visualize data for International Open  Weightlifting Sport competitions by IPF in order to identify trends in the activities of the athletes grouped by gender, age, countries, and to perform comparative analysis over time - 5 years time frame (2018-2023)
 Python language in PyCharm environment, CSV files and Database (PostgreSQL) were used as tools.
 
+## Libraries used:
++ selenium
++ psycopg2
++ webdriver_manager
++ configparser
++ pandas
++ numpy
++ sqlalchemy
++ matplotlib
++ seaborn
++ plotly.express
++ sklearn.model_selection
++ sklearn.linear_model
++ time
+
 ## ipf_scraper.py:
-Piece of code which scrapes the website https://www.openipf.org/. 
-Scraping is done using selenium library; 
-Connections to PostgreSQL are setup using psycopg2 and configparser libraries;
-A *.csv file was created alongside the insert to table using pandas library;
-A while loop was used in order to make sure the whole webpage was scraped;
-For loops combined with if statements were used to ensure that duplicate entries are not stored in the table;
-To fully scrape the website it took 62,863 seconds – this generated 165,386 rows of data. We wanted to fully scrape the website, since the sorting of the data in the website was not according to date and we wanted to have as much data from recent times as possible.
++ Piece of code which scrapes the website https://www.openipf.org/.
++ To fully scrape the website it took 62,863 seconds – this generated 165,386 rows of data. We wanted to fully scrape the website, since the sorting of the data in the website was not according to date and we wanted to have as much data from recent times as possible.
 
 ## ipf_analysis.py:
 The file contains the connection to postgreSQL database in order to retrieve the data previously scraped by ipf_scraper.py using sqlalchemy library as well as configparser;
 Using pandas a DataFrame is formed, Null values are dropped and further data ‘clean-up’, column creation, mapping of locations and age_groups is done;
 The file contains 7 functions:
-  age_group(age) – a simple function used in creation of column of the same name in the DataFrame
-  total_rs_gender(start_date, end_date)
-  athlete_count_year(start_year, end_year)
-  athlete_count_country(start_year, end_year)
-  top5_strongest_countries(year)
-  average_age_by_year_gender(start_year, end_year)
-  average_strength_age_group(year)
-  relative_strength_regression(date_start, date_end)
++ age_group(age) – a simple function used in creation of column of the same name in the DataFrame
++ total_rs_gender(start_date, end_date)
++ athlete_count_year(start_year, end_year)
++ athlete_count_country(start_year, end_year)
++ top5_strongest_countries(year)
++ average_age_by_year_gender(start_year, end_year)
++ average_strength_age_group(year)
++ relative_strength_regression(date_start, date_end)
 
 
 ## Linear graphs No. 1, No. 2, and bar graphs No. 3, No. 4:
