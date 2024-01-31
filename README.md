@@ -14,9 +14,9 @@ Python language in PyCharm environment, CSV files and Database (PostgreSQL) were
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/rs%20and%20total%20by%20gender.png)
 ## Bar graph No. 5:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/female%20rs%20projection.png)
-## Bar graph No 6:
+## Linear graph No 6:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/male%20rs%20projection.png)
-## Bar graph No. 7:
+## Linear graph No. 7:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/athlete%20count%20by%20year.png)
 ## Map graph No. 8:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/athlete%20count%20by%20country.png)
