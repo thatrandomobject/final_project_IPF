@@ -23,14 +23,14 @@ To fully scrape the website it took 62,863 seconds – this generated 165,386 ro
 The file contains the connection to postgreSQL database in order to retrieve the data previously scraped by ipf_scraper.py using sqlalchemy library as well as configparser;
 Using pandas a DataFrame is formed, Null values are dropped and further data ‘clean-up’, column creation, mapping of locations and age_groups is done;
 The file contains 7 functions:
-age_group(age) – a simple function used in creation of column of the same name in the DataFrame
-total_rs_gender(start_date, end_date)
-athlete_count_year(start_year, end_year)
-athlete_count_country(start_year, end_year)
-top5_strongest_countries(year)
-average_age_by_year_gender(start_year, end_year)
-average_strength_age_group(year)
-relative_strength_regression(date_start, date_end)
+  age_group(age) – a simple function used in creation of column of the same name in the DataFrame
+  total_rs_gender(start_date, end_date)
+  athlete_count_year(start_year, end_year)
+  athlete_count_country(start_year, end_year)
+  top5_strongest_countries(year)
+  average_age_by_year_gender(start_year, end_year)
+  average_strength_age_group(year)
+  relative_strength_regression(date_start, date_end)
 
 
 ## Linear graphs No. 1, No. 2, and bar graphs No. 3, No. 4:
