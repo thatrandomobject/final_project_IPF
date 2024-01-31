@@ -10,7 +10,7 @@ Project theme: Sport Competition Analysis.
 This project is designed to collect data (Web Scraping), analyse and visualize data for International Open  Weightlifting Sport competitions by IPF in order to identify trends in the activities of the athletes grouped by gender, age, countries, and to perform comparative analysis over time - 5 years time frame (2018-2023)
 Python language in PyCharm environment, CSV files and Database (PostgreSQL) were used as tools.
 
-## Linear graphs No. 1, No. 2,
+## Linear graphs No. 1, No. 2:
 ## and bar graphs No. 3, No. 4:
 
 ## Bar graph No. 5:
