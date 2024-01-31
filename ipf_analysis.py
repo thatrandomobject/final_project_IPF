@@ -1,9 +1,13 @@
 import pandas as pd
+from sklearn.metrics import mean_squared_error
 from sqlalchemy import create_engine
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 import configparser
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 
 # visual aid for DataFrames
 pd.set_option('display.max_rows', 500)
@@ -111,6 +115,7 @@ def age_group(age):
 
 df['event_date'] = pd.to_datetime(df['event_date'])
 df['year'] = df['event_date'].dt.year.astype(int)
+df['month'] = df['event_date'].dt.month.astype(int)
 df['athlete_name'] = df['athlete_name'].str.split(' #').str[0]
 df['age'] = pd.to_numeric(df['age'].str.replace('~', ''))
 df['weight'] = pd.to_numeric(df['weight'])
@@ -120,31 +125,46 @@ df['deadlift'] = pd.to_numeric(df['deadlift'])
 df['total'] = pd.to_numeric(df['total'])
 df['glp_score'] = pd.to_numeric(df['glp_score'])
 df['home'] = df['home'].str.split('-').str[0]
-df['relative_strength'] = df['total']/df['weight']
-df['longitude'] = df['home'].map(longitude, None)
-df['latitude'] = df['home'].map(latitude, None)
-df['age_group'] = df['age'].apply(age_group)
+df['relative_strength'] = df['total']/df['weight']  # calculation of relative strength
+df['longitude'] = df['home'].map(longitude, None)  # mapping of longitude to home
+df['latitude'] = df['home'].map(latitude, None)  # mapping of latitude to home
+df['age_group'] = df['age'].apply(age_group)  # applying age_group function
 
 # CHART FUNCTIONS
 
 # a function that draws 4 charts, 2 for male and 2 for female stats
 
-def total_rs_gender(start_date, end_date, df):
-    df = df[(df['event_date'] < f'{end_date}')&(df['event_date'] > f'{start_date}')]
-    df_male = df[df['sex'] == 'M']
+def total_rs_gender(start_date, end_date):
+    # set function arguments as variables
+    start_date = start_date
+    end_date = end_date
+    # apply time filter to main data frame
+    time_filtered_df = df[(df['event_date'] < f'{end_date}') & (df['event_date'] > f'{start_date}')]
+    # apply gender filter
+    df_male = time_filtered_df[time_filtered_df['sex'] == 'M']
+    # groupby and calculate averages
     average_total_male = df_male.groupby(['year'])['total'].mean()
     average_rs_male = df_male.groupby(['year'])['relative_strength'].mean()
-    df_female = df[df['sex'] == 'F']
+    df_female = time_filtered_df[time_filtered_df['sex'] == 'F']
     average_total_female = df_female.groupby(['year'])['total'].mean()
     average_rs_female = df_female.groupby(['year'])['relative_strength'].mean()
+    # set figure size
     plt.figure(figsize=(8, 8))
+    # define subplots
     plt.subplot(2, 2, 1)
+    # define type of plot
     average_rs_male.plot(kind='line')
+    # set limits to y-axis
     plt.ylim(4, 7)
+    # set formatting of text of x-axis
     plt.xticks(rotation=0)
+     # set title of chart
     plt.title('Average Male RS by Year')
+    # set title of y-axis
     plt.ylabel('Ratio of Total to athlete Weight')
+    # set title of x-axis
     plt.xlabel('Year')
+    # do the same for other plots
     plt.subplot(2, 2, 2)
     average_rs_female.plot(kind='line')
     plt.ylim(4, 7)
@@ -167,17 +187,27 @@ def total_rs_gender(start_date, end_date, df):
     plt.title('Average Female Total by Year')
     plt.ylabel('kg, total')
     plt.xlabel('Year')
+    # removes overlapping and others issues with alignment
     plt.tight_layout()
+    # show chart
     plt.show()
 
 
-# total_rs_gender('2018-01-01', '2024-01-01', df)
+total_rs_gender('2018-01-01', '2024-01-01')
 
 # athlete count change by year seaborn barplot
-def athlete_count_year(start_year, end_year, df):
-    df = df[(df['year'] < end_year) & (df['year'] >= start_year)]
-    athlete_count_by_year = df.groupby(['year'])['athlete_name'].count()
+def athlete_count_year(start_year, end_year):
+    # filter time
+    start_year = start_year
+    end_year = end_year
+    df_time_filtered = df[(df['year'] < end_year) & (df['year'] >= start_year)]
+    # value_counts() is used to find the repeating names and index reset is done convert series to dataframe so that we could group it again
+    grouped_athlete_count_by_year = df_time_filtered.groupby('year')['athlete_name'].value_counts().reset_index()
+    # counting unique athletes
+    athlete_count_by_year = grouped_athlete_count_by_year.groupby('year')['athlete_name'].count()
+    # setting figure size
     plt.figure(figsize=(8, 8))
+    # using seaborn to plot the data as a bar plot
     sns.barplot(athlete_count_by_year)
     plt.title('Athlete Count by Year')
     plt.xlabel('Year')
@@ -186,18 +216,22 @@ def athlete_count_year(start_year, end_year, df):
     plt.show()
 
 
-# athlete_count_year(2018, 2024, df)
+# athlete_count_year(2018, 2024)
 
 # athlete count by home over years plotly time period 2018-2024
-def athlete_count_country(start_year, end_year, df):
-    df = df[(df['year'] < end_year)&(df['year'] >= start_year)]
-    home_athlete_count = df.groupby(['home', 'longitude', 'latitude', 'year'])['athlete_name'].count()
+def athlete_count_country(start_year, end_year):
+    df_year_filtered = df[(df['year'] < end_year) & (df['year'] >= start_year)]
+    # grouping the data by country, the coordinates and year
+    home_athlete_count = df_year_filtered.groupby(['home', 'longitude', 'latitude', 'year'])
+    ['athlete_name'].count()
+    # resetting indexes and renaming columns for use in plotly scatter_geo chart
     df_home_athlete_count = home_athlete_count.to_frame().reset_index().rename(columns={
         'home': 'Country',
         'longitude': 'Lon',
         'latitude': 'Lat',
         'year': 'Year',
         'athlete_name': 'Athlete Count'})
+    # defining plotly figure
     fig = px.scatter_geo(df_home_athlete_count, lat='Lat', lon='Lon', color="Country",
                          size="Athlete Count", size_max=70,
                          animation_frame="Year",
@@ -209,6 +243,8 @@ def athlete_count_country(start_year, end_year, df):
 
 # top 5 strongest countries in year X by total
 def top5_strongest_countries(year):
+    year = year
+    # finding the top 5 countries by total for the entered 'year'
     strongest_countries = df[df['year'] == year].groupby('home')['total'].max().sort_values(ascending=False).head(5).reset_index()
     plt.figure(figsize=(8, 8))
     fig = sns.barplot(data=strongest_countries, x='home', y='total', hue='home')
@@ -216,6 +252,7 @@ def top5_strongest_countries(year):
     plt.xlabel('Country')
     plt.ylabel('kg, Total')
     plt.tight_layout()
+    # adding in values at the top of bars
     for i in fig.containers:
         fig.bar_label(i)
     plt.show()
@@ -225,29 +262,25 @@ def top5_strongest_countries(year):
 
 # average age by gender by years
 
-def average_age_by_year_gender(start_year, end_year, df):
-    df = df[(df['year'] < end_year) & (df['year'] >= start_year) & (df['sex'] != 'Mx')]
-    # df_male = df[df['sex'] == 'M']
-    # df_female = df[df['sex'] == 'F']
-    # grouped_df_m = df_male.groupby(['sex', 'year'])['age'].mean().reset_index()
-    # grouped_df_f = df_female.groupby(['sex', 'year'])['age'].mean().reset_index()
-    # grouped_df_m.plot(kind='line')
+def average_age_by_year_gender(start_year, end_year):
+    df_filtered = df[(df['year'] < end_year) & (df['year'] >= start_year) & (df['sex'] != 'Mx')]
     plt.figure(figsize=(8, 8))
-    sns.barplot(df, x='year', y='age', hue='sex')
+    sns.barplot(df_filtered, x='year', y='age', hue='sex')
     plt.title('Average Age of Athletes by Year')
     plt.legend(title='Gender')
     plt.xlabel('Year')
     plt.ylabel('Age')
     plt.show()
 
-# average_age_by_year_gender(2018, 2024, df)
+
+# average_age_by_year_gender(2018, 2024)
 
 # average strength by age category bench, squat, deadlift
 
 
-def average_strength_age_group(year, df):
-    df = df[df['year'] == year]
-    grouped_df = df.groupby('age_group')[['squat', 'bench_press', 'deadlift']].mean()
+def average_strength_age_group(year):
+    df_year = df[df['year'] == year]
+    grouped_df = df_year.groupby('age_group')[['squat', 'bench_press', 'deadlift']].mean()
     plt.figure(figsize=(8, 8))
     plt.subplot(3, 1, 1)
     sns.barplot(grouped_df, x='age_group', y='squat', hue='age_group')
@@ -268,5 +301,69 @@ def average_strength_age_group(year, df):
     plt.show()
 
 # average_strength_age_group(2023, df)
+
+
+def relative_strength_regression(date_start, date_end):
+    date_start = date_start
+    date_end = date_end
+    # filter and sort in ascending order of events
+    filtered_df = df[(df['event_date'] >= date_start)&(df['event_date'] < date_end)
+                     &(df['equip'] == 'Classic')&(df['sex'] != 'Mx')].sort_values('event_date')
+    # group dataframe and reset_index to convert from series to dataframe
+    grouped_df = filtered_df.groupby(['sex', 'year', 'month'])['relative_strength'].mean().reset_index()
+    gender_list = ['F', 'M']
+    # create charts for both genders
+    for gender in gender_list:
+        # filter to gender data
+        gender_df = grouped_df[grouped_df['sex'] == gender]
+        # set length of time into the future for prediction
+        future_months = 12
+        # create a time variable for splitting. I believe it is possible to do this with time variables, but need to study it more
+        gender_df['Month_index'] = range(1, len(gender_df)+1)
+        # creating a Date column in the df in order to have a column with the same name and consistent dates
+        gender_df['Date'] = pd.to_datetime(gender_df[['year', 'month']].assign(DAY=1))
+        # get the latest month in the index
+        last_month_index = max(gender_df['Month_index'])
+        # create a dataframe for future prediction which follows after actual data
+        future_df_g = pd.DataFrame({'Month_index': np.arange(last_month_index+1, last_month_index+future_months+1)})
+        # set a start date from which to predict
+        start_date = pd.to_datetime(date_end)
+        # generate a date column for future_df_g
+        future_df_g['Date'] = pd.date_range(start=start_date, periods=12, freq='MS')
+        # concatenate old and new dataframes
+        extended_df_f = pd.concat([gender_df, future_df_g], ignore_index=True)
+        # setting the independent and dependent variables
+        X = gender_df[['Month_index']]
+        y = gender_df['relative_strength']
+        # define the extended X axis
+        X_extended = extended_df_f[['Month_index']]
+        # creating training and test sets
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+        # choosing the model
+        model = LinearRegression()
+        # training the model
+        model.fit(X_train, y_train)
+        # this creates the fitted data which has the least possible mean squared error, this not shown in the graph
+        # y_predict = model.predict(X_test)
+        # extended data based on the training model
+        y_future_predict = model.predict(X_extended)
+        plt.figure(figsize=(8, 8))
+        # plot actual data for gender relative strength
+        plt.plot(gender_df['Date'], gender_df['relative_strength'],
+                 label=f'Actual Data of Average Relative Strength, {gender}')
+        # plot prediction for 12months of relative data
+        plt.plot(future_df_g['Date'], y_future_predict[-future_months:],
+                 linestyle='dotted', label=f'Predicted RS, {gender}')
+        plt.title(f'Relative strength prediction for unequipped athletes over time, {gender}')
+        plt.xlabel('Time')
+        plt.ylabel('kg, Relative strength')
+        plt.legend()
+    plt.show()
+
+# regression of unequiped/classic strength over years for bench, squat, deadlift
+
+
+# relative_strength_regression('2018-01-01', '2024-01-01')
+
 
 
