@@ -282,7 +282,7 @@ def average_strength_age_group(year):
     plt.figure(figsize=(8, 8))
     plt.subplot(3, 1, 1)
     sns.barplot(grouped_df, x='age_group', y='squat', hue='age_group')
-    plt.title(f'Average Squat for each Age Group in Year {year}')
+    plt.title(f'Average Squat for Each Age Group in Year {year}')
     plt.xlabel('Age group')
     plt.ylabel('kg, Strength')
     plt.subplot(3, 1, 2)
