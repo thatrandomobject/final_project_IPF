@@ -60,7 +60,7 @@ The file contains 7 functions:
 ## Bar graph No. 11:
 ![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/top%205%20strongest%20countries.png)
 
-**## Summary of Key Findings**
+## Summary of Key Findings
 
   We found it interesting to group the powerlifters by gender and to see how their Relative Strength (RS) changes over chosen time (5 yrs.).  Where RS refers to the amount of force/ power a person can generate in relation to their body weight (Relative Strength Ratio=Total Strength/ Body Weight) and illustrates powerlifter’s efficiency and progress in a more objective manner. The first 2 linear graphs illustrate that in time the RS grows almost gradually in both groups, and the difference between male and female groups is not that big. We could state that the efficiency of the individuals in Weightlifting sport is increasing over time.
 
