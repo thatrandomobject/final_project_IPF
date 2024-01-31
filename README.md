@@ -11,6 +11,7 @@ This project is designed to collect data (Web Scraping), analyse and visualize d
 Python language in PyCharm environment, CSV files and Database (PostgreSQL) were used as tools.
 
 ## Linear graphs No. 1, No. 2:
+![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/rs%20and%20total%20by%20gender.png)
 ## and bar graphs No. 3, No. 4:
 
 ## Bar graph No. 5:
