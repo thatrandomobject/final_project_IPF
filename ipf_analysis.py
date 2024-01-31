@@ -221,8 +221,7 @@ def athlete_count_year(start_year, end_year):
 def athlete_count_country(start_year, end_year):
     df_year_filtered = df[(df['year'] < end_year) & (df['year'] >= start_year)]
     # grouping the data by country, the coordinates and year
-    home_athlete_count = df_year_filtered.groupby(['home', 'longitude', 'latitude', 'year'])
-    ['athlete_name'].count()
+    home_athlete_count = df_year_filtered.groupby(['home', 'longitude', 'latitude', 'year'])['athlete_name'].count()
     # resetting indexes and renaming columns for use in plotly scatter_geo chart
     df_home_athlete_count = home_athlete_count.to_frame().reset_index().rename(columns={
         'home': 'Country',
