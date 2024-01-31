@@ -67,13 +67,13 @@ The file contains 7 functions:
 
   Further we chose to count all the powerlifters who were active in competitions in the same chosen time frame of 5 sequent yrs.. It was interesting to observe a quite sharp drop down in 2020 and 2022. COVID pandemic obviously influenced the results of 2020. We decided to check our hypothesis for 2022 by looking into the count of the powerlifters across the countries (Map graph No. 8), and the results showed that number of active powerlifters dropped down in Ukraine and Russia, when normally the numbers of individuals in mentioned countries are high. Data confirmed that the results of 2022 were affected by the war in Ukraine. 
 
-  Graphs No. 9, No. 10, and No. 11 are about interesting facts to know: 
+  The graphs No. 9, No. 10, and No. 11 are about interesting facts to know: 
 
-  The average age is higher in females’ group then in men’s over the comparative time period of 5 sequent yrs (No. 7).
+  The average age is higher in females’ group then in men’s over the comparative time period of 5 sequent yrs (No. 9).
   
-  The average of Total Strength among different age groups of the powerlifters across three specific lifts (Squat, Bench, and Deadlift). Data from 2023 suggests (No. 8). Are you up for Deadlift in your age group?
+  The average of Total Strength among different age groups of the powerlifters across three specific lifts (Squat, Bench, and Deadlift). Data from 2023 suggests (No. 10). Are you up for Deadlift in your age group?
   
-  Where the strongest powerlifters live? Bar Graph No. 9 with TOP 5 Countries to look into based on data from 2023.
+  Where the strongest powerlifters live? Bar graph No. 11 with TOP 5 Countries to look into based on data from 2023.
 
 
 
