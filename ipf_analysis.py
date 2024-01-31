@@ -161,7 +161,7 @@ def total_rs_gender(start_date, end_date):
      # set title of chart
     plt.title('Average Male RS by Year')
     # set title of y-axis
-    plt.ylabel('Ratio of Total to athlete Weight')
+    plt.ylabel('Ratio of Total to Athlete Weight')
     # set title of x-axis
     plt.xlabel('Year')
     # do the same for other plots
@@ -169,7 +169,7 @@ def total_rs_gender(start_date, end_date):
     average_rs_female.plot(kind='line')
     plt.ylim(4, 7)
     plt.xticks(rotation=0)
-    plt.ylabel('Ratio of Total to athlete Weight')
+    plt.ylabel('Ratio of Total to Athlete Weight')
     plt.title('Average Female RS by Year')
     plt.xlabel('Year')
     plt.tight_layout()
@@ -284,17 +284,17 @@ def average_strength_age_group(year):
     plt.figure(figsize=(8, 8))
     plt.subplot(3, 1, 1)
     sns.barplot(grouped_df, x='age_group', y='squat', hue='age_group')
-    plt.title(f'Average Squat for each Age Group in year {year}')
+    plt.title(f'Average Squat for each Age Group in Year {year}')
     plt.xlabel('Age group')
     plt.ylabel('kg, Strength')
     plt.subplot(3, 1, 2)
     sns.barplot(grouped_df, x='age_group', y='bench_press', hue='age_group')
-    plt.title(f'Average Bench Press for each Age Group in year {year}')
+    plt.title(f'Average Bench Press for Each Age Group in Year {year}')
     plt.xlabel('Age group')
     plt.ylabel('kg, Strength')
     plt.subplot(3, 1, 3)
     sns.barplot(grouped_df, x='age_group', y='deadlift', hue='age_group')
-    plt.title(f'Average Deadlift for each Age Group in year {year}')
+    plt.title(f'Average Deadlift for Each Age Group in Year {year}')
     plt.xlabel('Age group')
     plt.ylabel('kg, Strength')
     plt.tight_layout()
@@ -354,7 +354,7 @@ def relative_strength_regression(date_start, date_end):
         # plot prediction for 12months of relative data
         plt.plot(future_df_g['Date'], y_future_predict[-future_months:],
                  linestyle='dotted', label=f'Predicted RS, {gender}')
-        plt.title(f'Relative strength prediction for unequipped athletes over time, {gender}')
+        plt.title(f'Relative Strength Prediction for Classic Athletes Over Time, {gender}')
         plt.xlabel('Time')
         plt.ylabel('kg, Relative strength')
         plt.legend()
