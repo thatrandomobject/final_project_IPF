@@ -15,6 +15,7 @@ Python language in PyCharm environment, CSV files and Database (PostgreSQL) were
 ## and bar graphs No. 3, No. 4:
 
 ## Bar graph No. 5:
+![alt_text](https://github.com/thatrandomobject/final_project_IPF/blob/main/charts/athlete%20count%20by%20year.png)
 
 ## Map graph No. 6:
 
