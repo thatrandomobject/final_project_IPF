@@ -307,8 +307,8 @@ def relative_strength_regression(date_start, date_end):
     date_start = date_start
     date_end = date_end
     # filter and sort in ascending order of events
-    filtered_df = df[(df['event_date'] >= date_start)&(df['event_date'] < date_end)
-                     &(df['equip'] == 'Classic')&(df['sex'] != 'Mx')].sort_values('event_date')
+    filtered_df = df[(df['event_date'] >= date_start) & (df['event_date'] < date_end)
+                     & (df['equip'] == 'Classic') & (df['sex'] != 'Mx')].sort_values('event_date')
     # group dataframe and reset_index to convert from series to dataframe
     grouped_df = filtered_df.groupby(['sex', 'year', 'month'])['relative_strength'].mean().reset_index()
     gender_list = ['F', 'M']
@@ -356,7 +356,7 @@ def relative_strength_regression(date_start, date_end):
                  linestyle='dotted', label=f'Predicted RS, {gender}')
         plt.title(f'Relative Strength Prediction for Classic Athletes Over Time, {gender}')
         plt.xlabel('Time')
-        plt.ylabel('kg, Relative strength')
+        plt.ylabel('kg, Relative Strength')
         plt.legend()
     plt.show()
 
