@@ -2,7 +2,7 @@
 
 ## Details
 
-# Created by: Linas Vaičiūnas and Rita Masionė
+## Created by: Linas Vaičiūnas and Rita Masionė
 
 This is the final project by students for Vilnius Coding School.
 Project theme: Sport Competition Analysis.
