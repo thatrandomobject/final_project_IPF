@@ -157,7 +157,7 @@ while height_of_data < max_height - 25:
         else:
             # text that is printed if rank had already been in the rank_list
             print(f'Data already scraped for: {rank}')
-    # commiting the data from the insert query
+    # committing the data from the insert query
     connection.commit()
     # scrolling the element
     driver.execute_script('arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;',

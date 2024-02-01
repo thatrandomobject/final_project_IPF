@@ -257,7 +257,6 @@ def athlete_count_country(start_year, end_year):
         'year': 'Year',
         'athlete_name': 'Athlete Count'})
     # defining plotly figure
-    print(df_home_athlete_count)
     fig = px.scatter_geo(df_home_athlete_count, lat='Lat', lon='Lon', color="Country",
                          size="Athlete Count", size_max=60,
                          animation_frame="Year",
@@ -271,7 +270,8 @@ def athlete_count_country(start_year, end_year):
 def top5_strongest_countries(year):
     year = year
     # finding the top 5 countries by total for the entered 'year'
-    strongest_countries = df[df['year'] == year].groupby('home')['total'].max().sort_values(ascending=False).head(5).reset_index()
+    strongest_countries = (df[df['year'] == year].groupby('home')['total'].max().sort_values(ascending=False)
+                           .head(5).reset_index())
     plt.figure(figsize=(8, 8))
     fig = sns.barplot(data=strongest_countries, x='home', y='total', hue='home')
     plt.title(f'Top 5 Countries by Total in {year}')
