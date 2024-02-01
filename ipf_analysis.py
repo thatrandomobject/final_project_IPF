@@ -7,11 +7,15 @@ import configparser
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
 
 # visual aid for DataFrames
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 500)
+# removes error message, we are not sure if this affects our case as explained in pandas.pydata.org documentation
+pd.options.mode.copy_on_write = True
 
 # connection to postgreSQL
 config = configparser.ConfigParser()
@@ -101,6 +105,8 @@ df = pd.read_sql_query(sql_query, engine)
 df = df.dropna()
 
 # data clean-up, mapping and other data preparation
+
+
 def age_group(age):
     if age <= 18:
         return '01 Sub-Junior'
@@ -132,6 +138,7 @@ df['age_group'] = df['age'].apply(age_group)  # applying age_group function
 # CHART FUNCTIONS
 
 # a function that draws 4 charts, 2 for male and 2 for female stats
+
 
 def total_rs_gender(start_date, end_date):
     # set function arguments as variables
@@ -219,7 +226,8 @@ def athlete_count_year(start_year, end_year):
     start_year = start_year
     end_year = end_year
     df_time_filtered = df[(df['year'] < end_year) & (df['year'] >= start_year)]
-    # value_counts() is used to find the repeating names and index reset is done convert series to dataframe so that we could group it again
+    # value_counts() is used to find the repeating names and index reset is done convert series to dataframe so that
+    # we could group it again
     grouped_athlete_count_by_year = df_time_filtered.groupby('year')['athlete_name'].value_counts().reset_index()
     # counting unique athletes
     athlete_count_by_year = grouped_athlete_count_by_year.groupby('year')['athlete_name'].count()
@@ -296,7 +304,6 @@ def average_age_by_year_gender(start_year, end_year):
 
 # average strength by age category bench, squat, deadlift
 
-
 def average_strength_age_group(year):
     df_year = df[df['year'] == year]
     grouped_df = df_year.groupby('age_group')[['squat', 'bench_press', 'deadlift']].mean()
@@ -337,7 +344,8 @@ def relative_strength_regression(date_start, date_end):
         gender_df = grouped_df[grouped_df['sex'] == gender]
         # set length of time into the future for prediction
         future_months = 12
-        # create a time variable for splitting. I believe it is possible to do this with time variables, but need to study it more
+        # create a time variable for splitting. I believe it is possible to do this with time variables,
+        # but need to study it more
         gender_df['Month_index'] = range(1, len(gender_df)+1)
         # creating a Date column in the df in order to have a column with the same name and consistent dates
         gender_df['Date'] = pd.to_datetime(gender_df[['year', 'month']].assign(DAY=1))
@@ -362,8 +370,10 @@ def relative_strength_regression(date_start, date_end):
         model = LinearRegression()
         # training the model
         model.fit(X_train, y_train)
-        # this creates the fitted data which has the least possible mean squared error, this not shown in the graph
-        # y_predict = model.predict(X_test)
+        # testing the prediction model by checking the mean squared error
+        y_predict = model.predict(X_test)
+        mse = mean_squared_error(y_test, y_predict)
+        print(f'Mean squared error is: {mse}')
         # extended data based on the training model
         y_future_predict = model.predict(X_extended)
         plt.figure(figsize=(8, 8))
