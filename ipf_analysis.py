@@ -211,7 +211,7 @@ def total_rs_gender(start_date, end_date):
     plt.show()
 
 
-total_rs_gender('2018-01-01', '2024-01-01')
+# total_rs_gender('2018-01-01', '2024-01-01')
 
 # athlete count change by year seaborn barplot
 def athlete_count_year(start_year, end_year):
@@ -249,8 +249,9 @@ def athlete_count_country(start_year, end_year):
         'year': 'Year',
         'athlete_name': 'Athlete Count'})
     # defining plotly figure
+    print(df_home_athlete_count)
     fig = px.scatter_geo(df_home_athlete_count, lat='Lat', lon='Lon', color="Country",
-                         size="Athlete Count", size_max=70,
+                         size="Athlete Count", size_max=60,
                          animation_frame="Year",
                          projection="natural earth", title='Athlete Count by Country')
     fig.show()
@@ -287,6 +288,7 @@ def average_age_by_year_gender(start_year, end_year):
     plt.legend(title='Gender')
     plt.xlabel('Year')
     plt.ylabel('Age')
+    plt.tight_layout()
     plt.show()
 
 
