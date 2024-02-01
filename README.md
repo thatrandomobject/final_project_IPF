@@ -7,7 +7,7 @@
 This is the final project by students for Vilnius Coding School.
 Project theme: Sport Competition Analysis.
 
-This project is designed to collect data (Web Scraping), analyse and visualize data for International Open  Weightlifting Sport competitions by IPF in order to identify trends in the activities of the athletes grouped by gender, age, countries, and to perform comparative analysis over time. Chosen webpage contains data for 1973-2023. And all data was scraped for this project's purpose. Just the graphs represent the results of the last five qonsequent years (2018-2023).
+This project is designed to collect data (Web Scraping), analyse and visualize data for International Open  Weightlifting Sport competitions by IPF in order to identify trends in the activities of the athletes grouped by gender, age, countries, and to perform comparative analysis over time. Chosen webpage contains data for 1973-2023. And all data was scraped for this project's purpose. Just the graphs represent the results of the last five years (2018-2023).
 Python language in PyCharm environment, CSV files and Database (PostgreSQL) were used as tools.
 
 ## Libraries used:
