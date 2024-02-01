@@ -147,6 +147,25 @@ def total_rs_gender(start_date, end_date):
     df_female = time_filtered_df[time_filtered_df['sex'] == 'F']
     average_total_female = df_female.groupby(['year'])['total'].mean()
     average_rs_female = df_female.groupby(['year'])['relative_strength'].mean()
+    # setting up min and max limits for y-axis
+    max_male_total = average_total_male.max()
+    max_female_total = average_total_female.max()
+    max_rs_male = average_rs_male.max()
+    min_rs_male = average_rs_male.min()
+    max_rs_female = average_rs_female.max()
+    min_rs_female = average_rs_female.min()
+    if max_male_total > max_female_total:
+        bar_upper_limit = max_male_total
+    else:
+        bar_upper_limit = max_female_total
+    if max_rs_male > max_rs_female:
+        line_upper_limit = max_rs_male
+    else:
+        line_upper_limit = max_rs_female
+    if min_rs_female < min_rs_male:
+        line_lower_limit = min_rs_female
+    else:
+        line_lower_limit = min_rs_male
     # set figure size
     plt.figure(figsize=(8, 8))
     # define subplots
@@ -154,7 +173,7 @@ def total_rs_gender(start_date, end_date):
     # define type of plot
     average_rs_male.plot(kind='line')
     # set limits to y-axis
-    plt.ylim(4, 7)
+    plt.ylim(line_lower_limit * 0.8, line_upper_limit * 1.2)
     # set formatting of text of x-axis
     plt.xticks(rotation=0)
     # set title of chart
@@ -166,7 +185,7 @@ def total_rs_gender(start_date, end_date):
     # do the same for other plots
     plt.subplot(2, 2, 2)
     average_rs_female.plot(kind='line')
-    plt.ylim(4, 7)
+    plt.ylim(line_lower_limit * 0.8, line_upper_limit * 1.2)
     plt.xticks(rotation=0)
     plt.ylabel('Ratio of Total to Athlete Weight')
     plt.title('Average Female RS by Year')
@@ -174,14 +193,14 @@ def total_rs_gender(start_date, end_date):
     plt.tight_layout()
     plt.subplot(2, 2, 3)
     average_total_male.plot(kind='bar')
-    plt.ylim(0, 650)
+    plt.ylim(0, bar_upper_limit * 1.1)
     plt.xticks(rotation=0)
     plt.title('Average Male Total by Year')
     plt.ylabel('kg, Total')
     plt.xlabel('Year')
     plt.subplot(2, 2, 4)
     average_total_female.plot(kind='bar')
-    plt.ylim(0, 650)
+    plt.ylim(0, bar_upper_limit * 1.1)
     plt.xticks(rotation=0)
     plt.title('Average Female Total by Year')
     plt.ylabel('kg, Total')
@@ -192,7 +211,7 @@ def total_rs_gender(start_date, end_date):
     plt.show()
 
 
-# total_rs_gender('2018-01-01', '2024-01-01')
+total_rs_gender('2018-01-01', '2024-01-01')
 
 # athlete count change by year seaborn barplot
 def athlete_count_year(start_year, end_year):
